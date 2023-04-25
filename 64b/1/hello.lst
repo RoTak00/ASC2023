@@ -1,0 +1,50 @@
+     1                                  section .data
+     2                                  
+     3 00000000 7B                      bNum db 123
+     4 00000001 3930                    wNum dw 12345
+     5 00000003 4E61BC00                dNum dd 12345678
+     6 00000007 87D6120000000000        qNum1 dq 1234567
+     7 0000000F 3930000000000000        qNum2 dq 12345
+     8 00000017 1F85EB51B81E0940        qNum3 dq 3.14
+     9                                  
+    10                                  section .bss
+    11                                  
+    12                                  section .text
+    13                                  global main
+    14                                  main:
+    15 00000000 55                          push rbp
+    16 00000001 4889E5                      mov rbp, rsp
+    17                                  
+    18 00000004 48C7C0FFFFFFFF              mov rax, -1
+    19 0000000B 8A0425[00000000]            mov al, byte [bNum]
+    20                                  
+    21 00000012 4831C0                      xor rax, rax
+    22                                  
+    23 00000015 8A0425[00000000]            mov al, byte [bNum]
+    24                                  
+    25 0000001C 48C7C0FFFFFFFF              mov rax, -1
+    26 00000023 668B0425[01000000]          mov ax, word [wNum]
+    27                                  
+    28 0000002B 4831C0                      xor rax, rax
+    29                                  
+    30 0000002E 668B0425[01000000]          mov ax, word [wNum]
+    31                                  
+    32 00000036 48C7C0FFFFFFFF              mov rax, -1
+    33                                  
+    34 0000003D 8B0425[03000000]            mov eax, dword [dNum]
+    35 00000044 48C7C0FFFFFFFF              mov rax, -1
+    36                                  
+    37 0000004B 488B0425[07000000]          mov rax, qword [qNum1]
+    38 00000053 48890425[0F000000]          mov qword [qNum2], rax
+    39                                  
+    40 0000005B F30F7E0425-                 movq xmm0, [qNum3]
+    40 00000060 [17000000]         
+    41                                  
+    42 00000064 4889EC                      mov rsp, rbp
+    43 00000067 5D                          pop rbp
+    44                                  
+    45 00000068 B83C000000                  mov rax, 60
+    46 0000006D BF00000000                  mov rdi, 0
+    47                                  
+    48 00000072 0F05                        syscall
+    49                                    
