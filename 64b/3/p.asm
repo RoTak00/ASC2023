@@ -8,6 +8,7 @@ section .data
 
 section .bss
     a resq 1
+
     b resq 1
 
 section .text
