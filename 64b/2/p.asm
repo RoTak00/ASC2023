@@ -1,5 +1,5 @@
 section .data
-    number1 dq 35
+    number1 dq 41
     number2 dq 41
 
     fmt1 db "Number1 >= Number2",0xa,0

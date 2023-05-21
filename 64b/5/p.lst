@@ -1,0 +1,51 @@
+     1                                  section .data
+     2 00000000 9A99993F                    x dd 1.2   ; Input value of x for which sin(x) will be approximated
+     3                                  
+     4 00000004 25302E32660A                print_string db "%0.2f",0xa
+     5 0000000A 10                          buffer db 16
+     6                                  
+     7                                  section .text
+     8                                      extern printf
+     9                                      extern scanf
+    10                                  
+    11                                      global main
+    12                                  main:
+    13                                      ; Your code goes here
+    14                                  
+    15                                      ; Compute the Taylor expansion of sin(x) up to the 4th term
+    16 00000000 D90425[00000000]            fld dword [x]         ; Load x onto the FPU stack
+    17                                  
+    18 00000007 D80C25[00000000]            fmul dword [x]        ; Multiply x by x (x^2)
+    19 0000000E D83425[0B000000]            fdiv dword [factorial2]  ; Divide by 2! (2)
+    20 00000015 DEE1                        fsubrp st1, st0       ; Subtract (x^2 / 2!) from x
+    21                                  
+    22 00000017 D80C25[00000000]            fmul dword [x]        ; Multiply x by x^2 (x^3)
+    23 0000001E D83425[0F000000]            fdiv dword [factorial3]  ; Divide by 3! (6)
+    24 00000025 DEC1                        faddp st1, st0        ; Add (x^3 / 3!) to the result
+    25                                  
+    26 00000027 D80C25[00000000]            fmul dword [x]        ; Multiply x by x^3 (x^4)
+    27 0000002E D83425[13000000]            fdiv dword [factorial4]  ; Divide by 4! (24)
+    28 00000035 DEE1                        fsubrp st1, st0       ; Subtract (x^4 / 4!) from the result
+    29                                  
+    30                                      ; Result is now in st0
+    31                                  
+    32                                      ; Rest of your code goes here
+    33                                  
+    34                                  
+    35 00000037 83EC08                      sub esp, dword 8              ; Allocate space on the stack for the floating-point number
+    36 0000003A 67DD1C24                    fstp qword [esp]        ; Store the value in st0 onto the stack
+    37                                  
+    38 0000003E 68[0A000000]                push buffer             ; Push the buffer address onto the stack
+    39 00000043 68[04000000]                push dword print_string      ; Push the format string address onto the stack
+    40 00000048 E8(00000000)                call printf             ; Call the C library printf function to print the number
+    41                                  
+    42 0000004D 83C40C                      add esp, 12 
+    43                                      ; Exit the program
+    44 00000050 B83C000000                  mov eax, 60
+    45 00000055 31FF                        xor edi, edi
+    46 00000057 0F05                        syscall
+    47                                  
+    48                                  section .data
+    49 0000000B 00000040                    factorial2 dd 2.0    ; Constant value of 2!
+    50 0000000F 0000C040                    factorial3 dd 6.0    ; Constant value of 3!
+    51 00000013 0000C041                    factorial4 dd 24.0   ; Constant value of 4!
